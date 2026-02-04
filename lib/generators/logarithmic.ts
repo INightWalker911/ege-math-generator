@@ -30,11 +30,32 @@ function genLog(base: number, maxPower: number): Problem {
 
   const statement = `Решите уравнение: log${subscript(base)}(${inner}) = ${d}.`;
 
-  const steps: Step[] = [
+  // Решение ОДЗ: bx + c > 0 => bx > -c => x > -c/b
+  const odzBound = -c / b;
+  const odzSteps: Step[] = [
     {
       explanation: `ОДЗ: аргумент логарифма должен быть положительным:`,
       formula: `${inner} > 0`,
     },
+  ];
+  if (b !== 1) {
+    odzSteps.push({
+      explanation: `Перенесём (${c}) в правую часть:`,
+      formula: `${b}x > ${-c}`,
+    });
+    odzSteps.push({
+      explanation: `Разделим на ${b}:`,
+      formula: `x > ${odzBound}`,
+    });
+  } else {
+    odzSteps.push({
+      explanation: `Решим неравенство:`,
+      formula: `x > ${-c}`,
+    });
+  }
+
+  const steps: Step[] = [
+    ...odzSteps,
     {
       explanation: `По определению логарифма, перейдём к показательной форме:`,
       formula: `${inner} = ${base}^${d}`,
@@ -94,10 +115,15 @@ function genLogFraction(base: number): Problem {
 
   const statement = `Решите уравнение: log(1/${base})(${inner}) = ${d}.`;
 
+  // Решение ОДЗ: x + c > 0 => x > -c
   const steps: Step[] = [
     {
       explanation: `ОДЗ: аргумент логарифма должен быть положительным:`,
       formula: `${inner} > 0`,
+    },
+    {
+      explanation: `Решим неравенство:`,
+      formula: `x > ${-c}`,
     },
     {
       explanation: `По определению логарифма:`,
