@@ -43,17 +43,29 @@ function genLog(base: number, maxPower: number): Problem {
 
   if (b !== 1) {
     steps.push({
-      explanation: `Перенесём ${c} в правую часть:`,
-      formula: `${b}x = ${aToD} ${c >= 0 ? '- ' + c : '+ ' + Math.abs(c)} = ${aToD - c}`,
+      explanation: `Перенесём (${c}) в правую часть:`,
+      formula: `${b}x = ${aToD} ${c >= 0 ? '- ' + c : '+ ' + Math.abs(c)}`,
+    });
+    steps.push({
+      explanation: 'Вычислим:',
+      formula: `${b}x = ${aToD - c}`,
     });
     steps.push({
       explanation: `Разделим на ${b}:`,
-      formula: `x = ${aToD - c} / ${b} = ${x}`,
+      formula: `x = ${aToD - c} / ${b}`,
+    });
+    steps.push({
+      explanation: 'Получим ответ:',
+      formula: `x = ${x}`,
     });
   } else {
     steps.push({
-      explanation: `Найдём x:`,
-      formula: `x = ${aToD} ${c >= 0 ? '- ' + c : '+ ' + Math.abs(c)} = ${x}`,
+      explanation: `Перенесём (${c}) в правую часть:`,
+      formula: `x = ${aToD} ${c >= 0 ? '- ' + c : '+ ' + Math.abs(c)}`,
+    });
+    steps.push({
+      explanation: 'Получим ответ:',
+      formula: `x = ${x}`,
     });
   }
 
@@ -79,12 +91,16 @@ function genLogFraction(base: number): Problem {
       formula: `${inner} = (1/${base})^${d < 0 ? '(' + d + ')' : d}`,
     },
     {
-      explanation: `Преобразуем: (1/${base})^${d} = ${base}^(${-d}) = ${aToMinusD}:`,
+      explanation: `Преобразуем: (1/${base})^${d} = ${base}^(${-d}):`,
       formula: `${inner} = ${aToMinusD}`,
     },
     {
-      explanation: `Найдём x:`,
-      formula: `x = ${aToMinusD} ${c >= 0 ? '- ' + c : '+ ' + Math.abs(c)} = ${x}`,
+      explanation: `Перенесём (${c}) в правую часть:`,
+      formula: `x = ${aToMinusD} ${c >= 0 ? '- ' + c : '+ ' + Math.abs(c)}`,
+    },
+    {
+      explanation: 'Получим ответ:',
+      formula: `x = ${x}`,
     },
   ];
 

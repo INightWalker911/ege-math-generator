@@ -1,5 +1,5 @@
 import { Difficulty, Problem, Step } from './types';
-import { randInt, randNonZero, pick } from '../utils';
+import { randInt, pick } from '../utils';
 
 /**
  * Генератор квадратных уравнений.
@@ -44,12 +44,20 @@ export function generateQuadratic(difficulty: Difficulty): Problem {
     // Один корень (кратный)
     const D = bCoeff * bCoeff - 4 * a * cCoeff;
     steps.push({
-      explanation: 'Найдём дискриминант:',
-      formula: `D = ${bCoeff}² - 4·${a}·${cCoeff} = ${bCoeff * bCoeff} - ${4 * a * cCoeff} = ${D}`,
+      explanation: `Найдём дискриминант: D = b² - 4ac`,
+      formula: `D = (${bCoeff})² - 4·${a}·(${cCoeff})`,
     });
     steps.push({
-      explanation: 'Дискриминант равен 0, уравнение имеет один корень:',
-      formula: `x = -${bCoeff} / (2·${a}) = ${-bCoeff} / ${2 * a} = ${x1}`,
+      explanation: 'Вычислим:',
+      formula: `D = ${bCoeff * bCoeff} - ${4 * a * cCoeff}`,
+    });
+    steps.push({
+      explanation: `D = ${D}. Дискриминант равен 0, уравнение имеет один корень:`,
+      formula: `x = -(${bCoeff}) / (2·${a})`,
+    });
+    steps.push({
+      explanation: 'Получим ответ:',
+      formula: `x = ${x1}`,
     });
     return { type: 'quadratic', statement, answer: String(x1), steps };
   }
@@ -60,16 +68,24 @@ export function generateQuadratic(difficulty: Difficulty): Problem {
   const maxRoot = Math.max(x1, x2);
 
   steps.push({
-    explanation: 'Найдём дискриминант:',
-    formula: `D = (${bCoeff})² - 4·${a}·(${cCoeff}) = ${bCoeff * bCoeff} - (${4 * a * cCoeff}) = ${D}`,
+    explanation: 'Найдём дискриминант: D = b² - 4ac',
+    formula: `D = (${bCoeff})² - 4·${a}·(${cCoeff})`,
   });
   steps.push({
-    explanation: 'Дискриминант положителен, уравнение имеет два корня:',
-    formula: `√D = √${D} = ${sqrtD}`,
+    explanation: 'Вычислим:',
+    formula: `D = ${D}`,
   });
   steps.push({
-    explanation: 'Найдём корни по формуле:',
-    formula: `x₁ = (${-bCoeff} - ${sqrtD}) / ${2 * a} = ${minRoot}, x₂ = (${-bCoeff} + ${sqrtD}) / ${2 * a} = ${maxRoot}`,
+    explanation: 'Дискриминант положителен, найдём корни по формуле:',
+    formula: `√D = ${sqrtD}`,
+  });
+  steps.push({
+    explanation: 'Первый корень:',
+    formula: `x₁ = (-(${bCoeff}) - ${sqrtD}) / (2·${a}) = ${minRoot}`,
+  });
+  steps.push({
+    explanation: 'Второй корень:',
+    formula: `x₂ = (-(${bCoeff}) + ${sqrtD}) / (2·${a}) = ${maxRoot}`,
   });
   steps.push({
     explanation: 'Меньший из корней:',

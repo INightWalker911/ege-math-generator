@@ -60,7 +60,11 @@ export function generateLinear(difficulty: Difficulty): Problem {
     });
     steps.push({
       explanation: `Разделим обе части на ${newA}:`,
-      formula: `x = ${newD} / ${newA} = ${x}`,
+      formula: `x = ${newD} / (${newA})`,
+    });
+    steps.push({
+      explanation: 'Получим ответ:',
+      formula: `x = ${x}`,
     });
   } else {
     steps.push({
@@ -73,7 +77,11 @@ export function generateLinear(difficulty: Difficulty): Problem {
     });
     steps.push({
       explanation: `Разделим обе части на ${a}:`,
-      formula: `x = ${d - b} / ${a} = ${x}`,
+      formula: `x = ${d - b} / ${a}`,
+    });
+    steps.push({
+      explanation: 'Получим ответ:',
+      formula: `x = ${x}`,
     });
   }
 

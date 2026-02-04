@@ -29,11 +29,19 @@ function genSqrtSimple(): Problem {
   const steps: Step[] = [
     {
       explanation: 'Возведём обе части уравнения в квадрат:',
-      formula: `${inner} = ${c}² = ${c * c}`,
+      formula: `${inner} = ${c}²`,
     },
     {
-      explanation: 'Найдём x:',
-      formula: `x = ${c * c} ${b >= 0 ? '- ' + b : '+ ' + Math.abs(b)} = ${x}`,
+      explanation: 'Вычислим:',
+      formula: `${inner} = ${c * c}`,
+    },
+    {
+      explanation: `Перенесём (${b}) в правую часть:`,
+      formula: `x = ${c * c} ${b >= 0 ? '- ' + b : '+ ' + Math.abs(b)}`,
+    },
+    {
+      explanation: 'Получим ответ:',
+      formula: `x = ${x}`,
     },
     {
       explanation: 'Проверка: подставим x в исходное уравнение:',
@@ -58,19 +66,31 @@ function genSqrtWithCoeff(): Problem {
   const steps: Step[] = [
     {
       explanation: 'Возведём обе части уравнения в квадрат:',
-      formula: `${inner} = ${c}² = ${c * c}`,
+      formula: `${inner} = ${c}²`,
     },
     {
-      explanation: `Перенесём ${b >= 0 ? b : '(' + b + ')'} в правую часть:`,
-      formula: `${a}x = ${c * c} ${b >= 0 ? '- ' + b : '+ ' + Math.abs(b)} = ${c * c - b}`,
+      explanation: 'Вычислим:',
+      formula: `${inner} = ${c * c}`,
+    },
+    {
+      explanation: `Перенесём (${b}) в правую часть:`,
+      formula: `${a}x = ${c * c} ${b >= 0 ? '- ' + b : '+ ' + Math.abs(b)}`,
+    },
+    {
+      explanation: 'Вычислим:',
+      formula: `${a}x = ${c * c - b}`,
     },
     {
       explanation: `Разделим на ${a}:`,
-      formula: `x = ${c * c - b} / ${a} = ${x}`,
+      formula: `x = ${c * c - b} / ${a}`,
+    },
+    {
+      explanation: 'Получим ответ:',
+      formula: `x = ${x}`,
     },
     {
       explanation: 'Проверка ОДЗ: подкоренное выражение неотрицательно:',
-      formula: `${a}·${x} + ${b} = ${a * x + b} = ${c * c} ≥ 0 ✓`,
+      formula: `${a}·(${x}) + (${b}) = ${c * c} ≥ 0 ✓`,
     },
   ];
 
@@ -99,11 +119,15 @@ function genSqrtEquation(): Problem {
     },
     {
       explanation: 'Возведём обе части в квадрат:',
-      formula: `${inner} = (x ${d >= 0 ? '+ ' + d : '- ' + Math.abs(d)})² = ${rightSide * rightSide}`,
+      formula: `${inner} = (x ${d >= 0 ? '+ ' + d : '- ' + Math.abs(d)})²`,
     },
     {
-      explanation: 'Подставим x и убедимся:',
-      formula: `При x = ${x}: √(${a * x + b}) = √${rightSide * rightSide} = ${rightSide}, и ${x} + ${d} = ${rightSide} ✓`,
+      explanation: `Подставим x = ${x} в обе части и проверим:`,
+      formula: `Левая: √(${a * x + b}) = ${rightSide}`,
+    },
+    {
+      explanation: `Правая часть:`,
+      formula: `${x} ${d >= 0 ? '+ ' + d : '- ' + Math.abs(d)} = ${rightSide} ✓`,
     },
   ];
 

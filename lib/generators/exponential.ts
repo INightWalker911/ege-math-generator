@@ -34,8 +34,12 @@ function genExpSimple(base: number): Problem {
       formula: `x ${formatSign(b)} = ${c}`,
     },
     {
-      explanation: `Найдём x:`,
-      formula: `x = ${c} ${formatSign(-b)} = ${x}`,
+      explanation: `Перенесём ${b >= 0 ? b : '(' + b + ')'} в правую часть:`,
+      formula: `x = ${c} ${formatSign(-b)}`,
+    },
+    {
+      explanation: 'Получим ответ:',
+      formula: `x = ${x}`,
     },
   ];
 
@@ -64,7 +68,11 @@ function genExpInverse(base: number): Problem {
     },
     {
       explanation: 'Найдём x:',
-      formula: `x = ${-c} ${formatSign(-b)} = ${x}`,
+      formula: `x = ${-c} ${formatSign(-b)}`,
+    },
+    {
+      explanation: 'Получим ответ:',
+      formula: `x = ${x}`,
     },
   ];
 
@@ -86,11 +94,19 @@ function genExpDouble(base: number): Problem {
     },
     {
       explanation: 'Перенесём свободный член:',
-      formula: `${k}x = ${c} ${formatSign(-b)} = ${c - b}`,
+      formula: `${k}x = ${c} ${formatSign(-b)}`,
+    },
+    {
+      explanation: 'Вычислим:',
+      formula: `${k}x = ${c - b}`,
     },
     {
       explanation: `Разделим на ${k}:`,
-      formula: `x = ${c - b} / ${k} = ${x}`,
+      formula: `x = ${c - b} / ${k}`,
+    },
+    {
+      explanation: 'Получим ответ:',
+      formula: `x = ${x}`,
     },
   ];
 
