@@ -1,0 +1,103 @@
+import { Difficulty, Problem, Step } from './types';
+import { randInt, pick } from '../utils';
+
+/**
+ * Генератор логарифмических уравнений.
+ * log_a(bx + c) = d  =>  bx + c = a^d  =>  x = (a^d - c) / b
+ * Обратная генерация: выбираем x, a, b, d, вычисляем c = a^d - b*x
+ */
+export function generateLogarithmic(difficulty: Difficulty): Problem {
+  switch (difficulty) {
+    case 'easy':
+      return genLog(pick([2, 3, 5]), 1);
+    case 'medium':
+      return genLog(pick([2, 3, 5, 7]), 2);
+    case 'hard':
+      return genLogFraction(pick([2, 3, 5]));
+  }
+}
+
+/** log_a(bx + c) = d */
+function genLog(base: number, maxPower: number): Problem {
+  const d = randInt(1, maxPower + 1);
+  const aToD = Math.pow(base, d);
+  const b = pick([1, 1, 2, 3]);
+  const x = randInt(1, 15);
+  const c = aToD - b * x;
+
+  // Проверяем ОДЗ: bx + c > 0 => bx + c = a^d > 0 — всегда верно
+  const inner = b === 1 ? formatInner(1, c, 'x') : formatInner(b, c, 'x');
+
+  const statement = `Решите уравнение: log${subscript(base)}(${inner}) = ${d}.`;
+
+  const steps: Step[] = [
+    {
+      explanation: `По определению логарифма, перейдём к показательной форме:`,
+      formula: `${inner} = ${base}^${d}`,
+    },
+    {
+      explanation: `Вычислим ${base}^${d}:`,
+      formula: `${inner} = ${aToD}`,
+    },
+  ];
+
+  if (b !== 1) {
+    steps.push({
+      explanation: `Перенесём ${c} в правую часть:`,
+      formula: `${b}x = ${aToD} ${c >= 0 ? '- ' + c : '+ ' + Math.abs(c)} = ${aToD - c}`,
+    });
+    steps.push({
+      explanation: `Разделим на ${b}:`,
+      formula: `x = ${aToD - c} / ${b} = ${x}`,
+    });
+  } else {
+    steps.push({
+      explanation: `Найдём x:`,
+      formula: `x = ${aToD} ${c >= 0 ? '- ' + c : '+ ' + Math.abs(c)} = ${x}`,
+    });
+  }
+
+  return { type: 'logarithmic', statement, answer: String(x), steps };
+}
+
+/** log_{1/a}(bx + c) = d */
+function genLogFraction(base: number): Problem {
+  const d = pick([-1, -2, 1, 2]);
+  // log_{1/a}(expr) = d  =>  (1/a)^d = expr  =>  a^(-d) = expr
+  const aToMinusD = Math.pow(base, -d);
+  const x = randInt(1, 20);
+  const b = 1;
+  const c = aToMinusD - x;
+
+  const inner = formatInner(b, c, 'x');
+
+  const statement = `Решите уравнение: log(1/${base})(${inner}) = ${d}.`;
+
+  const steps: Step[] = [
+    {
+      explanation: `По определению логарифма:`,
+      formula: `${inner} = (1/${base})^${d < 0 ? '(' + d + ')' : d}`,
+    },
+    {
+      explanation: `Преобразуем: (1/${base})^${d} = ${base}^(${-d}) = ${aToMinusD}:`,
+      formula: `${inner} = ${aToMinusD}`,
+    },
+    {
+      explanation: `Найдём x:`,
+      formula: `x = ${aToMinusD} ${c >= 0 ? '- ' + c : '+ ' + Math.abs(c)} = ${x}`,
+    },
+  ];
+
+  return { type: 'logarithmic', statement, answer: String(x), steps };
+}
+
+function subscript(n: number): string {
+  return `₍${n}₎`;
+}
+
+function formatInner(b: number, c: number, v: string): string {
+  let result = b === 1 ? v : `${b}${v}`;
+  if (c > 0) result += ` + ${c}`;
+  else if (c < 0) result += ` - ${Math.abs(c)}`;
+  return result;
+}
