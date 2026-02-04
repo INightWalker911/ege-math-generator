@@ -24,3 +24,27 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@media print {
+  body {
+    background: white !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Показываем решения и ответы при печати */
+  .print-show {
+    display: block !important;
+  }
+
+  /* Убираем тени и скругления */
+  * {
+    box-shadow: none !important;
+  }
+
+  /* Не разрывать карточку задачи */
+  .problem-card {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}

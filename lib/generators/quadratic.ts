@@ -3,15 +3,14 @@ import { randInt, pick } from '../utils';
 
 /**
  * Генератор квадратных уравнений (средний уровень).
- * Обратная генерация: выбираем корни x1, x2, строим уравнение a(x - x1)(x - x2) = 0.
- * Для ЕГЭ базового уровня: если 2 корня, в ответ записываем меньший.
+ * @param scale — множитель для диапазонов чисел
  */
-export function generateQuadratic(): Problem {
+export function generateQuadratic(scale = 1): Problem {
+  const maxRoot = Math.max(3, Math.round(8 * scale));
   const a = pick([1, 1, 1, 2]);
-  const x1 = randInt(-8, 8);
-  const x2 = randInt(-8, 8);
+  const x1 = randInt(-maxRoot, maxRoot);
+  const x2 = randInt(-maxRoot, maxRoot);
 
-  // a(x - x1)(x - x2) = ax² - a(x1+x2)x + a·x1·x2
   const bCoeff = -a * (x1 + x2);
   const cCoeff = a * x1 * x2;
 
@@ -20,7 +19,6 @@ export function generateQuadratic(): Problem {
   const steps: Step[] = [];
 
   if (x1 === x2) {
-    // Один корень (кратный)
     const D = bCoeff * bCoeff - 4 * a * cCoeff;
     steps.push({
       explanation: `Найдём дискриминант: D = b² - 4ac`,
@@ -44,7 +42,7 @@ export function generateQuadratic(): Problem {
   const D = bCoeff * bCoeff - 4 * a * cCoeff;
   const sqrtD = Math.sqrt(D);
   const minRoot = Math.min(x1, x2);
-  const maxRoot = Math.max(x1, x2);
+  const maxRootVal = Math.max(x1, x2);
 
   steps.push({
     explanation: 'Найдём дискриминант: D = b² - 4ac',
@@ -64,7 +62,7 @@ export function generateQuadratic(): Problem {
   });
   steps.push({
     explanation: 'Второй корень:',
-    formula: `x₂ = (-(${bCoeff}) + ${sqrtD}) / (2·${a}) = ${maxRoot}`,
+    formula: `x₂ = (-(${bCoeff}) + ${sqrtD}) / (2·${a}) = ${maxRootVal}`,
   });
   steps.push({
     explanation: 'Меньший из корней:',
@@ -82,12 +80,10 @@ export function generateQuadratic(): Problem {
 function formatQuadratic(a: number, b: number, c: number): string {
   let result = '';
 
-  // ax²
   if (a === 1) result = 'x²';
   else if (a === -1) result = '-x²';
   else result = `${a}x²`;
 
-  // bx
   if (b !== 0) {
     if (b === 1) result += ' + x';
     else if (b === -1) result += ' - x';
@@ -95,7 +91,6 @@ function formatQuadratic(a: number, b: number, c: number): string {
     else result += ` - ${Math.abs(b)}x`;
   }
 
-  // c
   if (c !== 0) {
     if (c > 0) result += ` + ${c}`;
     else result += ` - ${Math.abs(c)}`;

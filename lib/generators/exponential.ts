@@ -5,27 +5,27 @@ const BASES = [2, 3, 5, 7];
 
 /**
  * Простые показательные уравнения (лёгкий уровень).
- * Случайно выбирает между:
- *   - a^(x+b) = a^c
- *   - (1/a)^(x+b) = a^c
+ * @param scale — множитель для диапазонов чисел
  */
-export function generateExpSimple(): Problem {
+export function generateExpSimple(scale = 1): Problem {
   const base = pick(BASES);
-  return pick([() => genExpDirect(base), () => genExpInverse(base)])();
+  return pick([() => genExpDirect(base, scale), () => genExpInverse(base, scale)])();
 }
 
 /**
  * Показательные уравнения посложнее (средний уровень).
- * a^(kx+b) = a^c, k = 2 или 3
+ * @param scale — множитель для диапазонов чисел
  */
-export function generateExpAdvanced(): Problem {
-  return genExpDouble(pick(BASES));
+export function generateExpAdvanced(scale = 1): Problem {
+  return genExpDouble(pick(BASES), scale);
 }
 
 /** a^(x+b) = a^c */
-function genExpDirect(base: number): Problem {
-  const x = randInt(-8, 8);
-  const b = randInt(-5, 5);
+function genExpDirect(base: number, scale: number): Problem {
+  const maxX = Math.max(3, Math.round(8 * scale));
+  const maxB = Math.max(2, Math.round(5 * scale));
+  const x = randInt(-maxX, maxX);
+  const b = randInt(-maxB, maxB);
   const c = x + b;
 
   const statement = `Решите уравнение: ${base}^(x ${formatSign(b)}) = ${base}^${formatPow(c)}.`;
@@ -47,10 +47,12 @@ function genExpDirect(base: number): Problem {
   return { type: 'exponential', statement, answer: String(x), steps };
 }
 
-/** (1/a)^(x+b) = a^c  =>  a^(-(x+b)) = a^c */
-function genExpInverse(base: number): Problem {
-  const x = randInt(-6, 6);
-  const b = randInt(-4, 4);
+/** (1/a)^(x+b) = a^c */
+function genExpInverse(base: number, scale: number): Problem {
+  const maxX = Math.max(2, Math.round(6 * scale));
+  const maxB = Math.max(2, Math.round(4 * scale));
+  const x = randInt(-maxX, maxX);
+  const b = randInt(-maxB, maxB);
   const c = -(x + b);
 
   const statement = `Решите уравнение: (1/${base})^(x ${formatSign(b)}) = ${base}^${formatPow(c)}.`;
@@ -81,10 +83,12 @@ function genExpInverse(base: number): Problem {
 }
 
 /** a^(kx+b) = a^c */
-function genExpDouble(base: number): Problem {
-  const x = randInt(-5, 5);
+function genExpDouble(base: number, scale: number): Problem {
+  const maxX = Math.max(2, Math.round(5 * scale));
+  const maxB = Math.max(2, Math.round(4 * scale));
+  const x = randInt(-maxX, maxX);
   const k = pick([2, 3]);
-  const b = randInt(-4, 4);
+  const b = randInt(-maxB, maxB);
   const c = k * x + b;
 
   const statement = `Решите уравнение: ${base}^(${k}x ${formatSign(b)}) = ${base}^${formatPow(c)}.`;

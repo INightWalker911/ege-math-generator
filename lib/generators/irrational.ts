@@ -3,19 +3,21 @@ import { randInt, pick } from '../utils';
 
 /**
  * Генератор иррациональных уравнений (средний уровень).
- * Случайно выбирает между:
- *   - √(x + b) = c
- *   - √(ax + b) = c (с коэффициентом)
- *   - √(ax + b) = x + d (с проверкой посторонних корней)
+ * @param scale — множитель для диапазонов чисел
  */
-export function generateIrrational(): Problem {
-  return pick([genSqrtSimple, genSqrtWithCoeff, genSqrtEquation])();
+export function generateIrrational(scale = 1): Problem {
+  return pick([
+    () => genSqrtSimple(scale),
+    () => genSqrtWithCoeff(scale),
+    () => genSqrtEquation(scale),
+  ])();
 }
 
 /** √(x + b) = c */
-function genSqrtSimple(): Problem {
-  const c = randInt(1, 8);
-  const b = randInt(-10, 20);
+function genSqrtSimple(scale: number): Problem {
+  const maxC = Math.max(2, Math.round(8 * scale));
+  const c = randInt(1, maxC);
+  const b = randInt(-10, Math.round(20 * scale));
   const x = c * c - b;
 
   const inner = formatInner(1, b, 'x');
@@ -48,10 +50,12 @@ function genSqrtSimple(): Problem {
 }
 
 /** √(ax + b) = c, a > 1 */
-function genSqrtWithCoeff(): Problem {
-  const c = randInt(1, 7);
+function genSqrtWithCoeff(scale: number): Problem {
+  const maxC = Math.max(2, Math.round(7 * scale));
+  const c = randInt(1, maxC);
   const a = pick([2, 3, 4, 5]);
-  const x = randInt(-5, 15);
+  const maxX = Math.max(3, Math.round(15 * scale));
+  const x = randInt(-Math.round(5 * scale), maxX);
   const b = c * c - a * x;
 
   const inner = formatInner(a, b, 'x');
@@ -91,10 +95,11 @@ function genSqrtWithCoeff(): Problem {
   return { type: 'irrational', statement, answer: String(x), steps };
 }
 
-/** √(ax + b) = x + d (с проверкой посторонних корней) */
-function genSqrtEquation(): Problem {
-  const x = randInt(1, 8);
-  const d = randInt(-x, 5);
+/** √(ax + b) = x + d */
+function genSqrtEquation(scale: number): Problem {
+  const maxX = Math.max(2, Math.round(8 * scale));
+  const x = randInt(1, maxX);
+  const d = randInt(-x, Math.round(5 * scale));
   const rightSide = x + d;
 
   const a = pick([1, 2, 3]);

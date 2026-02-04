@@ -3,24 +3,27 @@ import { randInt, randNonZero, formatCoeff, withSign } from '../utils';
 
 /**
  * Генератор линейных уравнений (лёгкий уровень).
- * Случайно генерирует ax + b = d или ax + b = cx + d.
+ * @param scale — множитель для диапазонов чисел
  */
-export function generateLinear(): Problem {
-  const x = randInt(-15, 15);
-  const a = randNonZero(7);
-  // С вероятностью ~50% делаем простое (c=0) или с двумя частями
+export function generateLinear(scale = 1): Problem {
+  const maxX = Math.round(15 * scale);
+  const maxA = Math.max(2, Math.round(7 * scale));
+  const maxB = Math.round(10 * scale);
+
+  const x = randInt(-maxX, maxX);
+  const a = randNonZero(maxA);
   const useSimple = Math.random() < 0.5;
 
   let b: number, c: number, d: number;
 
   if (useSimple) {
-    b = randInt(-10, 10);
+    b = randInt(-maxB, maxB);
     c = 0;
     d = a * x + b;
   } else {
-    c = randNonZero(7);
-    while (c === a) c = randNonZero(7);
-    b = randInt(-20, 20);
+    c = randNonZero(maxA);
+    while (c === a) c = randNonZero(maxA);
+    b = randInt(-maxB * 2, maxB * 2);
     d = a * x + b - c * x;
   }
 

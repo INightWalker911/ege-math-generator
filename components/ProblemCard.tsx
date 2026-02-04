@@ -13,7 +13,7 @@ export default function ProblemCard({ problem, index }: ProblemCardProps) {
   const [showAnswer, setShowAnswer] = useState(false);
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+    <div className="problem-card bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
       {/* Заголовок */}
       <div className="px-6 py-4 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -32,7 +32,7 @@ export default function ProblemCard({ problem, index }: ProblemCardProps) {
       </div>
 
       {/* Кнопки */}
-      <div className="px-6 pb-4 flex gap-3">
+      <div className="px-6 pb-4 flex gap-3 print:hidden">
         <button
           onClick={() => setShowAnswer(!showAnswer)}
           className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
@@ -56,38 +56,34 @@ export default function ProblemCard({ problem, index }: ProblemCardProps) {
       </div>
 
       {/* Ответ */}
-      {showAnswer && (
-        <div className="px-6 pb-4">
-          <div className="bg-green-50 border border-green-200 rounded-lg px-4 py-3">
-            <span className="text-sm font-medium text-green-700">Ответ: </span>
-            <span className="text-lg font-bold text-green-800">{problem.answer}</span>
-          </div>
+      <div className={`${showAnswer ? '' : 'hidden'} print:block px-6 pb-4`}>
+        <div className="bg-green-50 border border-green-200 rounded-lg px-4 py-3">
+          <span className="text-sm font-medium text-green-700">Ответ: </span>
+          <span className="text-lg font-bold text-green-800">{problem.answer}</span>
         </div>
-      )}
+      </div>
 
       {/* Пошаговое решение */}
-      {showSolution && (
-        <div className="px-6 pb-5">
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 space-y-3">
-            <h4 className="text-sm font-semibold text-blue-800 mb-2">
-              Пошаговое решение:
-            </h4>
-            {problem.steps.map((step, i) => (
-              <div key={i} className="flex gap-3">
-                <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-blue-200 text-blue-800 text-xs font-bold shrink-0 mt-0.5">
-                  {i + 1}
-                </span>
-                <div>
-                  <p className="text-sm text-blue-700">{step.explanation}</p>
-                  <p className="text-base font-mono text-blue-900 mt-1">
-                    {step.formula}
-                  </p>
-                </div>
+      <div className={`${showSolution ? '' : 'hidden'} print:block px-6 pb-5`}>
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 space-y-3">
+          <h4 className="text-sm font-semibold text-blue-800 mb-2">
+            Пошаговое решение:
+          </h4>
+          {problem.steps.map((step, i) => (
+            <div key={i} className="flex gap-3">
+              <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-blue-200 text-blue-800 text-xs font-bold shrink-0 mt-0.5">
+                {i + 1}
+              </span>
+              <div>
+                <p className="text-sm text-blue-700">{step.explanation}</p>
+                <p className="text-base font-mono text-blue-900 mt-1">
+                  {step.formula}
+                </p>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
-      )}
+      </div>
     </div>
   );
 }

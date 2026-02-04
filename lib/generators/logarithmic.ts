@@ -3,28 +3,27 @@ import { randInt, pick } from '../utils';
 
 /**
  * Генератор логарифмических уравнений (сложный уровень).
- * Случайно выбирает между:
- *   - log_a(bx + c) = d
- *   - log_{1/a}(bx + c) = d
+ * @param scale — множитель для диапазонов чисел
  */
-export function generateLogarithmic(): Problem {
+export function generateLogarithmic(scale = 1): Problem {
   const base = pick([2, 3, 5]);
-  return pick([() => genLog(base), () => genLogFraction(base)])();
+  return pick([() => genLog(base, scale), () => genLogFraction(base, scale)])();
 }
 
 /** log_a(bx + c) = d */
-function genLog(base: number): Problem {
-  const d = randInt(1, 3);
+function genLog(base: number, scale: number): Problem {
+  const maxPow = scale >= 1.5 ? 3 : 2;
+  const d = randInt(1, maxPow);
   const aToD = Math.pow(base, d);
   const b = pick([1, 1, 2, 3]);
-  const x = randInt(1, 15);
+  const maxX = Math.max(3, Math.round(15 * scale));
+  const x = randInt(1, maxX);
   const c = aToD - b * x;
 
   const inner = b === 1 ? formatInner(1, c, 'x') : formatInner(b, c, 'x');
 
   const statement = `Решите уравнение: log${subscript(base)}(${inner}) = ${d}.`;
 
-  // Решение ОДЗ: bx + c > 0 => bx > -c => x > -c/b
   const odzBound = -c / b;
   const odzSteps: Step[] = [
     {
@@ -97,10 +96,11 @@ function genLog(base: number): Problem {
 }
 
 /** log_{1/a}(bx + c) = d */
-function genLogFraction(base: number): Problem {
+function genLogFraction(base: number, scale: number): Problem {
   const d = pick([-1, -2, 1, 2]);
   const aToMinusD = Math.pow(base, -d);
-  const x = randInt(1, 20);
+  const maxX = Math.max(3, Math.round(20 * scale));
+  const x = randInt(1, maxX);
   const b = 1;
   const c = aToMinusD - x;
 
