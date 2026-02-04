@@ -1,44 +1,27 @@
-import { Difficulty, Problem, Step } from './types';
+import { Problem, Step } from './types';
 import { randInt, randNonZero, formatCoeff, withSign } from '../utils';
 
 /**
- * Генератор линейных уравнений вида ax + b = cx + d
- * Обратная генерация: выбираем x, затем строим уравнение.
+ * Генератор линейных уравнений (лёгкий уровень).
+ * Случайно генерирует ax + b = d или ax + b = cx + d.
  */
-export function generateLinear(difficulty: Difficulty): Problem {
-  let x: number;
-  let a: number, b: number, c: number, d: number;
+export function generateLinear(): Problem {
+  const x = randInt(-15, 15);
+  const a = randNonZero(7);
+  // С вероятностью ~50% делаем простое (c=0) или с двумя частями
+  const useSimple = Math.random() < 0.5;
 
-  switch (difficulty) {
-    case 'easy': {
-      // Простое: ax + b = d (c = 0)
-      x = randInt(-10, 10);
-      a = randNonZero(5);
-      b = randInt(-10, 10);
-      c = 0;
-      d = a * x + b;
-      break;
-    }
-    case 'medium': {
-      // ax + b = cx + d, оба коэффициента при x ненулевые
-      x = randInt(-15, 15);
-      a = randNonZero(7);
-      c = randNonZero(7);
-      while (c === a) c = randNonZero(7);
-      b = randInt(-20, 20);
-      d = a * x + b - c * x;
-      break;
-    }
-    case 'hard': {
-      // Большие коэффициенты
-      x = randInt(-20, 20);
-      a = randNonZero(12);
-      c = randNonZero(12);
-      while (c === a) c = randNonZero(12);
-      b = randInt(-30, 30);
-      d = a * x + b - c * x;
-      break;
-    }
+  let b: number, c: number, d: number;
+
+  if (useSimple) {
+    b = randInt(-10, 10);
+    c = 0;
+    d = a * x + b;
+  } else {
+    c = randNonZero(7);
+    while (c === a) c = randNonZero(7);
+    b = randInt(-20, 20);
+    d = a * x + b - c * x;
   }
 
   const leftSide = formatLinearSide(a, b);

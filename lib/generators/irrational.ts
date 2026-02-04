@@ -1,20 +1,15 @@
-import { Difficulty, Problem, Step } from './types';
+import { Problem, Step } from './types';
 import { randInt, pick } from '../utils';
 
 /**
- * Генератор иррациональных уравнений.
- * √(ax + b) = c  =>  ax + b = c²  =>  x = (c² - b) / a
- * Обратная генерация: выбираем x и c (c >= 0), строим уравнение.
+ * Генератор иррациональных уравнений (средний уровень).
+ * Случайно выбирает между:
+ *   - √(x + b) = c
+ *   - √(ax + b) = c (с коэффициентом)
+ *   - √(ax + b) = x + d (с проверкой посторонних корней)
  */
-export function generateIrrational(difficulty: Difficulty): Problem {
-  switch (difficulty) {
-    case 'easy':
-      return genSqrtSimple();
-    case 'medium':
-      return genSqrtWithCoeff();
-    case 'hard':
-      return genSqrtEquation();
-  }
+export function generateIrrational(): Problem {
+  return pick([genSqrtSimple, genSqrtWithCoeff, genSqrtEquation])();
 }
 
 /** √(x + b) = c */
@@ -59,7 +54,6 @@ function genSqrtWithCoeff(): Problem {
   const x = randInt(-5, 15);
   const b = c * c - a * x;
 
-  // Проверяем ax + b >= 0 (должно быть = c² >= 0, всегда верно)
   const inner = formatInner(a, b, 'x');
   const statement = `Решите уравнение: √(${inner}) = ${c}.`;
 
@@ -99,13 +93,10 @@ function genSqrtWithCoeff(): Problem {
 
 /** √(ax + b) = x + d (с проверкой посторонних корней) */
 function genSqrtEquation(): Problem {
-  // Выбираем x — корень, и d, чтобы x + d ≥ 0
   const x = randInt(1, 8);
-  const d = randInt(-x, 5); // x + d >= 0
+  const d = randInt(-x, 5);
   const rightSide = x + d;
 
-  // ax + b = (x + d)² = x² + 2dx + d²
-  // Значит √(ax + b) = x + d => ax + b = rightSide²
   const a = pick([1, 2, 3]);
   const b = rightSide * rightSide - a * x;
 

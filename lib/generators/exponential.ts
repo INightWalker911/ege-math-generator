@@ -1,28 +1,29 @@
-import { Difficulty, Problem, Step } from './types';
+import { Problem, Step } from './types';
 import { randInt, pick } from '../utils';
 
-/**
- * Генератор показательных уравнений.
- * Типы:
- *   - a^(x+b) = a^c  =>  x+b = c  =>  x = c - b
- *   - (1/a)^(x+b) = a^c  =>  a^(-(x+b)) = a^c  =>  -(x+b) = c
- *   - a^(2x+b) = a^c (сложнее)
- */
-export function generateExponential(difficulty: Difficulty): Problem {
-  const bases = [2, 3, 5, 7];
+const BASES = [2, 3, 5, 7];
 
-  switch (difficulty) {
-    case 'easy':
-      return genExpSimple(pick(bases));
-    case 'medium':
-      return genExpInverse(pick(bases));
-    case 'hard':
-      return genExpDouble(pick(bases));
-  }
+/**
+ * Простые показательные уравнения (лёгкий уровень).
+ * Случайно выбирает между:
+ *   - a^(x+b) = a^c
+ *   - (1/a)^(x+b) = a^c
+ */
+export function generateExpSimple(): Problem {
+  const base = pick(BASES);
+  return pick([() => genExpDirect(base), () => genExpInverse(base)])();
+}
+
+/**
+ * Показательные уравнения посложнее (средний уровень).
+ * a^(kx+b) = a^c, k = 2 или 3
+ */
+export function generateExpAdvanced(): Problem {
+  return genExpDouble(pick(BASES));
 }
 
 /** a^(x+b) = a^c */
-function genExpSimple(base: number): Problem {
+function genExpDirect(base: number): Problem {
   const x = randInt(-8, 8);
   const b = randInt(-5, 5);
   const c = x + b;
@@ -79,7 +80,7 @@ function genExpInverse(base: number): Problem {
   return { type: 'exponential', statement, answer: String(x), steps };
 }
 
-/** a^(2x+b) = a^c */
+/** a^(kx+b) = a^c */
 function genExpDouble(base: number): Problem {
   const x = randInt(-5, 5);
   const k = pick([2, 3]);

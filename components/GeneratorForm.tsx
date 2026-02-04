@@ -1,49 +1,30 @@
 'use client';
 
-import { Difficulty, ProblemType, PROBLEM_TYPE_LABELS, DIFFICULTY_LABELS } from '@/lib/generators';
+import { Difficulty, DIFFICULTY_LABELS } from '@/lib/generators';
 
 interface GeneratorFormProps {
-  type: ProblemType | 'all';
   difficulty: Difficulty;
   count: number;
-  onTypeChange: (type: ProblemType | 'all') => void;
   onDifficultyChange: (difficulty: Difficulty) => void;
   onCountChange: (count: number) => void;
   onGenerate: () => void;
 }
 
+const DIFFICULTY_DESCRIPTIONS: Record<Difficulty, string> = {
+  easy: 'Линейные и простые показательные уравнения',
+  medium: 'Квадратные, иррациональные и показательные уравнения',
+  hard: 'Логарифмические уравнения',
+};
+
 export default function GeneratorForm({
-  type,
   difficulty,
   count,
-  onTypeChange,
   onDifficultyChange,
   onCountChange,
   onGenerate,
 }: GeneratorFormProps) {
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 space-y-5">
-      {/* Тип уравнения */}
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Тип уравнения
-        </label>
-        <select
-          value={type}
-          onChange={(e) => onTypeChange(e.target.value as ProblemType | 'all')}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-        >
-          <option value="all">Все типы</option>
-          {(Object.entries(PROBLEM_TYPE_LABELS) as [ProblemType, string][]).map(
-            ([value, label]) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            )
-          )}
-        </select>
-      </div>
-
       {/* Сложность */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -66,6 +47,9 @@ export default function GeneratorForm({
             )
           )}
         </div>
+        <p className="text-xs text-gray-400 mt-2">
+          {DIFFICULTY_DESCRIPTIONS[difficulty]}
+        </p>
       </div>
 
       {/* Количество задач */}

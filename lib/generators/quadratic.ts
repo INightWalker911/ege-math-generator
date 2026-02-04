@@ -1,36 +1,15 @@
-import { Difficulty, Problem, Step } from './types';
+import { Problem, Step } from './types';
 import { randInt, pick } from '../utils';
 
 /**
- * Генератор квадратных уравнений.
+ * Генератор квадратных уравнений (средний уровень).
  * Обратная генерация: выбираем корни x1, x2, строим уравнение a(x - x1)(x - x2) = 0.
  * Для ЕГЭ базового уровня: если 2 корня, в ответ записываем меньший.
  */
-export function generateQuadratic(difficulty: Difficulty): Problem {
-  let x1: number, x2: number, a: number;
-
-  switch (difficulty) {
-    case 'easy': {
-      // a = 1, корни маленькие
-      a = 1;
-      x1 = randInt(-5, 5);
-      x2 = randInt(-5, 5);
-      break;
-    }
-    case 'medium': {
-      a = pick([1, 1, 1, 2]);
-      x1 = randInt(-8, 8);
-      x2 = randInt(-8, 8);
-      break;
-    }
-    case 'hard': {
-      a = pick([1, 2, 3]);
-      x1 = randInt(-10, 10);
-      x2 = randInt(-10, 10);
-      while (x2 === x1) x2 = randInt(-10, 10);
-      break;
-    }
-  }
+export function generateQuadratic(): Problem {
+  const a = pick([1, 1, 1, 2]);
+  const x1 = randInt(-8, 8);
+  const x2 = randInt(-8, 8);
 
   // a(x - x1)(x - x2) = ax² - a(x1+x2)x + a·x1·x2
   const bCoeff = -a * (x1 + x2);

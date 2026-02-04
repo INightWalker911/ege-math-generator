@@ -3,16 +3,15 @@
 import { useState } from 'react';
 import GeneratorForm from '@/components/GeneratorForm';
 import ProblemCard from '@/components/ProblemCard';
-import { generateProblems, Problem, ProblemType, Difficulty } from '@/lib/generators';
+import { generateProblems, Problem, Difficulty } from '@/lib/generators';
 
 export default function Home() {
-  const [type, setType] = useState<ProblemType | 'all'>('all');
   const [difficulty, setDifficulty] = useState<Difficulty>('medium');
   const [count, setCount] = useState(5);
   const [problems, setProblems] = useState<Problem[]>([]);
 
   const handleGenerate = () => {
-    setProblems(generateProblems(type, difficulty, count));
+    setProblems(generateProblems(difficulty, count));
   };
 
   return (
@@ -32,10 +31,8 @@ export default function Home() {
       <main className="max-w-4xl mx-auto px-4 py-8 space-y-6">
         {/* Форма настроек */}
         <GeneratorForm
-          type={type}
           difficulty={difficulty}
           count={count}
-          onTypeChange={setType}
           onDifficultyChange={setDifficulty}
           onCountChange={setCount}
           onGenerate={handleGenerate}

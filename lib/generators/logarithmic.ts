@@ -1,31 +1,25 @@
-import { Difficulty, Problem, Step } from './types';
+import { Problem, Step } from './types';
 import { randInt, pick } from '../utils';
 
 /**
- * Генератор логарифмических уравнений.
- * log_a(bx + c) = d  =>  bx + c = a^d  =>  x = (a^d - c) / b
- * Обратная генерация: выбираем x, a, b, d, вычисляем c = a^d - b*x
+ * Генератор логарифмических уравнений (сложный уровень).
+ * Случайно выбирает между:
+ *   - log_a(bx + c) = d
+ *   - log_{1/a}(bx + c) = d
  */
-export function generateLogarithmic(difficulty: Difficulty): Problem {
-  switch (difficulty) {
-    case 'easy':
-      return genLog(pick([2, 3, 5]), 1);
-    case 'medium':
-      return genLog(pick([2, 3, 5, 7]), 2);
-    case 'hard':
-      return genLogFraction(pick([2, 3, 5]));
-  }
+export function generateLogarithmic(): Problem {
+  const base = pick([2, 3, 5]);
+  return pick([() => genLog(base), () => genLogFraction(base)])();
 }
 
 /** log_a(bx + c) = d */
-function genLog(base: number, maxPower: number): Problem {
-  const d = randInt(1, maxPower + 1);
+function genLog(base: number): Problem {
+  const d = randInt(1, 3);
   const aToD = Math.pow(base, d);
   const b = pick([1, 1, 2, 3]);
   const x = randInt(1, 15);
   const c = aToD - b * x;
 
-  // Проверяем ОДЗ: bx + c > 0 => bx + c = a^d > 0 — всегда верно
   const inner = b === 1 ? formatInner(1, c, 'x') : formatInner(b, c, 'x');
 
   const statement = `Решите уравнение: log${subscript(base)}(${inner}) = ${d}.`;
@@ -105,7 +99,6 @@ function genLog(base: number, maxPower: number): Problem {
 /** log_{1/a}(bx + c) = d */
 function genLogFraction(base: number): Problem {
   const d = pick([-1, -2, 1, 2]);
-  // log_{1/a}(expr) = d  =>  (1/a)^d = expr  =>  a^(-d) = expr
   const aToMinusD = Math.pow(base, -d);
   const x = randInt(1, 20);
   const b = 1;
@@ -115,7 +108,6 @@ function genLogFraction(base: number): Problem {
 
   const statement = `Решите уравнение: log(1/${base})(${inner}) = ${d}.`;
 
-  // Решение ОДЗ: x + c > 0 => x > -c
   const steps: Step[] = [
     {
       explanation: `ОДЗ: аргумент логарифма должен быть положительным:`,
