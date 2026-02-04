@@ -142,8 +142,13 @@ function genLogFraction(base: number): Problem {
   return { type: 'logarithmic', statement, answer: String(x), steps };
 }
 
+const SUBSCRIPT_DIGITS = '₀₁₂₃₄₅₆₇₈₉';
+
 function subscript(n: number): string {
-  return `₍${n}₎`;
+  return String(n)
+    .split('')
+    .map((ch) => SUBSCRIPT_DIGITS[Number(ch)] ?? ch)
+    .join('');
 }
 
 function formatInner(b: number, c: number, v: string): string {
