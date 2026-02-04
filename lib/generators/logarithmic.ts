@@ -32,6 +32,10 @@ function genLog(base: number, maxPower: number): Problem {
 
   const steps: Step[] = [
     {
+      explanation: `ОДЗ: аргумент логарифма должен быть положительным:`,
+      formula: `${inner} > 0`,
+    },
+    {
       explanation: `По определению логарифма, перейдём к показательной форме:`,
       formula: `${inner} = ${base}^${d}`,
     },
@@ -69,6 +73,11 @@ function genLog(base: number, maxPower: number): Problem {
     });
   }
 
+  steps.push({
+    explanation: `Проверка ОДЗ: подставим x = ${x}:`,
+    formula: `${b === 1 ? '' : b + '·'}${x} ${c >= 0 ? '+ ' + c : '- ' + Math.abs(c)} = ${aToD} > 0 ✓`,
+  });
+
   return { type: 'logarithmic', statement, answer: String(x), steps };
 }
 
@@ -87,6 +96,10 @@ function genLogFraction(base: number): Problem {
 
   const steps: Step[] = [
     {
+      explanation: `ОДЗ: аргумент логарифма должен быть положительным:`,
+      formula: `${inner} > 0`,
+    },
+    {
       explanation: `По определению логарифма:`,
       formula: `${inner} = (1/${base})^${d < 0 ? '(' + d + ')' : d}`,
     },
@@ -101,6 +114,10 @@ function genLogFraction(base: number): Problem {
     {
       explanation: 'Получим ответ:',
       formula: `x = ${x}`,
+    },
+    {
+      explanation: `Проверка ОДЗ: подставим x = ${x}:`,
+      formula: `${x} ${c >= 0 ? '+ ' + c : '- ' + Math.abs(c)} = ${aToMinusD} > 0 ✓`,
     },
   ];
 
