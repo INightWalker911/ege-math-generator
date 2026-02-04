@@ -24,7 +24,7 @@ export default function Home() {
             Генератор задач ЕГЭ
           </h1>
           <p className="text-gray-500 mt-1">
-            Задание 6 — Решение уравнений (базовый уровень)
+            Задание 17 — Решение уравнений (базовый уровень)
           </p>
         </div>
       </header>
@@ -75,7 +75,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="border-t border-gray-200 mt-12">
         <div className="max-w-4xl mx-auto px-4 py-6 text-center text-sm text-gray-400">
-          Генератор задач ЕГЭ по математике. Задание 6 — Уравнения.
+          Генератор задач ЕГЭ по математике. Задание 17 — Уравнения.
           <br />
           Все задачи генерируются алгоритмически и математически корректны.
         </div>
