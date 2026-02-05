@@ -15,37 +15,25 @@ function genLog(base: number, scale: number): Problem {
   const maxPow = scale >= 1.5 ? 3 : 2;
   const d = randInt(1, maxPow);
   const aToD = Math.pow(base, d);
-  const b = pick([1, 1, 2, 3]);
+  const b = 1;
   const maxX = Math.max(3, Math.round(15 * scale));
   const x = randInt(1, maxX);
   const c = aToD - b * x;
 
-  const inner = b === 1 ? formatInner(1, c, 'x') : formatInner(b, c, 'x');
+  const inner = formatInner(1, c, 'x');
 
   const statement = `Решите уравнение: log${subscript(base)}(${inner}) = ${d}.`;
 
-  const odzBound = -c / b;
   const odzSteps: Step[] = [
     {
       explanation: `ОДЗ: аргумент логарифма должен быть положительным:`,
       formula: `${inner} > 0`,
     },
-  ];
-  if (b !== 1) {
-    odzSteps.push({
-      explanation: `Перенесём (${c}) в правую часть:`,
-      formula: `${b}x > ${-c}`,
-    });
-    odzSteps.push({
-      explanation: `Разделим на ${b}:`,
-      formula: `x > ${odzBound}`,
-    });
-  } else {
-    odzSteps.push({
+    {
       explanation: `Решим неравенство:`,
       formula: `x > ${-c}`,
-    });
-  }
+    },
+  ];
 
   const steps: Step[] = [
     ...odzSteps,
@@ -57,40 +45,19 @@ function genLog(base: number, scale: number): Problem {
       explanation: `Вычислим ${base}^${d}:`,
       formula: `${inner} = ${aToD}`,
     },
-  ];
-
-  if (b !== 1) {
-    steps.push({
-      explanation: `Перенесём (${c}) в правую часть:`,
-      formula: `${b}x = ${aToD} ${c >= 0 ? '- ' + c : '+ ' + Math.abs(c)}`,
-    });
-    steps.push({
-      explanation: 'Вычислим:',
-      formula: `${b}x = ${aToD - c}`,
-    });
-    steps.push({
-      explanation: `Разделим на ${b}:`,
-      formula: `x = ${aToD - c} / ${b}`,
-    });
-    steps.push({
-      explanation: 'Получим ответ:',
-      formula: `x = ${x}`,
-    });
-  } else {
-    steps.push({
+    {
       explanation: `Перенесём (${c}) в правую часть:`,
       formula: `x = ${aToD} ${c >= 0 ? '- ' + c : '+ ' + Math.abs(c)}`,
-    });
-    steps.push({
+    },
+    {
       explanation: 'Получим ответ:',
       formula: `x = ${x}`,
-    });
-  }
-
-  steps.push({
-    explanation: `Проверка ОДЗ: подставим x = ${x}:`,
-    formula: `${b === 1 ? '' : b + '·'}${x} ${c >= 0 ? '+ ' + c : '- ' + Math.abs(c)} = ${aToD} > 0 ✓`,
-  });
+    },
+    {
+      explanation: `Проверка ОДЗ: подставим x = ${x}:`,
+      formula: `${x} ${c >= 0 ? '+ ' + c : '- ' + Math.abs(c)} = ${aToD} > 0 ✓`,
+    },
+  ];
 
   return { type: 'logarithmic', statement, answer: String(x), steps };
 }
